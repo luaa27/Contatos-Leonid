@@ -1,109 +1,117 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const apiUrl = "URL_DA_SUA_API"; // Substitua "URL_DA_SUA_API" pela URL real da sua API
-    const app = document.getElementById("app");
-    const productList = document.getElementById("product-list");
-    const addProductBtn = document.getElementById("add-product-btn");
-    const productModal = document.getElementById("product-modal");
-    const saveProductBtn = document.getElementById("save-product-btn");
-    const productNameInput = document.getElementById("product-name");
-    const productDescriptionInput = document.getElementById("product-description");
-    const productPriceInput = document.getElementById("product-price");
+const url = 'http://localhost:8080';
 
-    // Função para obter todos os produtos da API
-    function getProducts() {
-        fetch(apiUrl + "/products")
-            .then(response => response.json())
-            .then(products => {
-                renderProducts(products);
-            })
-            .catch(error => console.error("Erro ao obter produtos:", error));
+async function getContatos() {
+    const link = `${url}/contatos`;
+    const response = await fetch(link);
+    const data = await response.json();
+    console.log(data);
+    return data;
+}
+
+async function percorrerArray() {
+    const retornoAPI = await getContatos();
+
+    retornoAPI.forEach(contato => {
+        const nome = contato.nome;
+        const email = contato.email;
+
+        const nomeHtml = document.getElementById('nomeContato');
+        nomeHtml.value = nome;
+    });
+}
+
+async function getContato(id) {
+    const link = `${url}/contato/${id}`;
+    const response = await fetch(link);
+    const data = await response.json();    
+    return data;
+}
+
+async function postContato(dados) {
+    const link = `${url}/contato`;
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(dados)
+    }
+    const response = await fetch(link, options);
+    return response.ok;
+}
+
+async function criarElementoNoBack(params) {
+    const nomeHTML = document.getElementById('nome').value;
+    const emailHTML = document.getElementById('email').value;
+
+    const novoClienteJSON = {
+        nome: nomeHTML,
+        email: emailHTML
     }
 
-    // Função para renderizar os produtos na página
-    function renderProducts(products) {
-        productList.innerHTML = "";
-        products.forEach(product => {
-            const productElement = document.createElement("div");
-            productElement.innerHTML = `
-                <div class="border rounded p-2 mb-2">
-                    <h2 class="text-lg font-bold">${product.name}</h2>
-                    <p class="text-gray-700">${product.description}</p>
-                    <p class="text-gray-600">Preço: $${product.price}</p>
-                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mt-2 delete-btn" data-id="${product.id}">Excluir</button>
-                </div>
-            `;
-            productList.appendChild(productElement);
-        });
+    const result = await postContato(novoClienteJSON);
+    if(result) {
+        // Faça alguma coisa se a requisição for bem-sucedida
+    } else {
+        alert("Ocorreu um erro ao criar a sua conta");
     }
+}
 
-    // Função para exibir o modal de adicionar produto
-    function showAddProductModal() {
-        productModal.classList.remove("hidden");
+async function putContato(dados, id) {
+    const link = `${url}/contato/${id}`;
+    const options = {
+        method: 'PUT',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(dados)
     }
+    const response = await fetch(link, options);
+    return response.ok;
+}
 
-    // Função para esconder o modal de adicionar produto
-    function hideAddProductModal() {
-        productModal.classList.add("hidden");
-    }
+async function AtualizarDadoNoBack(id) {
+    const perfilAntigo = await getContato(id);
 
-    // Evento de clique no botão "Adicionar Produto"
-    addProductBtn.addEventListener("click", showAddProductModal);
+    const nome = document.getElementById('nomeUsuario');
+    nome.value = perfilAntigo.nome;
 
-    // Evento de clique no botão "Fechar" do modal
-    productModal.querySelector(".modal-close").addEventListener("click", hideAddProductModal);
+    const email = document.getElementById('emailUsuario');
+    email.value = perfilAntigo.email;
 
-    // Evento de clique no botão "Salvar" do modal
-    saveProductBtn.addEventListener("click", function() {
-        const name = productNameInput.value;
-        const description = productDescriptionInput.value;
-        const price = parseFloat(productPriceInput.value);
-
-        // Verifica se todos os campos foram preenchidos
-        if (name && description && price) {
-            const newProduct = {
-                name,
-                description,
-                price
-            };
-
-            // Faz a requisição POST para adicionar o novo produto
-            fetch(apiUrl + "/products", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(newProduct)
-            })
-            .then(response => response.json())
-            .then(() => {
-                // Após adicionar o produto com sucesso, esconde o modal e atualiza a lista de produtos
-                hideAddProductModal();
-                getProducts();
-            })
-            .catch(error => console.error("Erro ao adicionar produto:", error));
+    const btn_editar = document.getElementById('btn_editar');
+    btn_editar.addEventListener('click', async () => {
+        const novosDados = {
+            nome: document.getElementById('nomeUsuario').value,
+            email: document.getElementById('emailUsuario').value
+        }
+        let status = await putContato(novosDados, id);
+        if (status) {
+            window.location.reload();
         } else {
-            console.error("Por favor, preencha todos os campos.");
+            alert('Ocorreu um erro');
         }
     });
+}
 
-    // Evento de clique no botão "Excluir" de um produto
-    productList.addEventListener("click", function(event) {
-        if (event.target.classList.contains("delete-btn")) {
-            const productId = event.target.dataset.id;
-            if (confirm("Tem certeza que deseja excluir este produto?")) {
-                // Faz a requisição DELETE para excluir o produto
-                fetch(apiUrl + `/products/${productId}`, {
-                    method: "DELETE"
-                })
-                .then(() => {
-                    // Após excluir o produto com sucesso, atualiza a lista de produtos
-                    getProducts();
-                })
-                .catch(error => console.error("Erro ao excluir produto:", error));
-            }
+async function deleteContato(id) {
+    const link = `${url}/contato/${id}`;
+    const options = {
+        method: 'DELETE'
+    }
+    const response = await fetch(link, options);
+    return response.ok;
+}
+
+const btn_excluir = document.getElementById('btn_excluir');
+btn_excluir.addEventListener('click', async function () {
+    var confirmado = confirm('Deseja deletar conta?');
+    if (confirmado) {
+        const result = await deleteContato(id);
+        if (result) {
+            window.location.reload();
+        } else {
+            alert('Ocorreu um erro');
         }
-    });
-
-    // Chama a função para obter todos os produtos ao carregar a página
-    getProducts();
+    }
 });
