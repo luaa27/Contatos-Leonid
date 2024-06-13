@@ -3,45 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD de Produtos</title>
+    <title>CRUD de Contatos</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        /* Estilos adicionais podem ser colocados aqui */
-    </style>
+    <script src="./js/add.js" defer></script>
+    <script src="./js/get.js" defer></script>
 </head>
-<body>
-    <div id="app" class="container mx-auto">
-        <!-- Botão para adicionar produto -->
-        <button id="add-product-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
-            Adicionar Produto
-        </button>
+<body id="body" class=" p-4">
+    <div>
+        <h1 class="text-xl font-bold mb-4">Gerenciamento de Contatos</h1>
 
-        <!-- Lista de produtos -->
-        <div id="product-list" class="grid grid-cols-1 gap-4"></div>
+        <div id="container" class="bg-white">
+            <p id="nomeContatos" class="text-lg"></p>
+            <p id="nomeCelular" class="text-lg"></p>
+        </div>
 
-        <!-- Modal para adicionar/editar produto -->
-        <div id="product-modal" class="fixed inset-0 flex items-center justify-center hidden">
-            <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
-            <div class="modal-container bg-white w-1/3 mx-auto p-4 rounded shadow-lg z-50">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="modal-close cursor-pointer absolute top-0 right-0 z-50 p-4">&times;</span>
-                        <h3 class="text-lg font-semibold mb-2">Adicionar Produto</h3>
-                    </div>
-                    <div class="modal-body">
-                        <input type="text" id="product-name" class="input-field mb-2 w-full" placeholder="Nome do Produto">
-                        <input type="text" id="product-description" class="input-field mb-2 w-full" placeholder="Descrição">
-                        <input type="number" id="product-price" class="input-field mb-2 w-full" placeholder="Preço">
-                    </div>
-                    <div class="modal-footer">
-                        <button id="save-product-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Salvar
-                        </button>
-                    </div>
-                </div>
+        <div id="contatoFocos" class="hidden bg-white">
+            <h2 class="text-lg font-semibold ">Editar Contato</h2>
+            <input type="text" placeholder="Nome" id="nomeContato" class="w-full p-2 mb-2 border rounded">
+            <input type="text" placeholder="Email" id="emailContato" class="w-full p-2 mb-2 border rounded">
+            <input type="number" placeholder="Celular" id="numeroCelular" class="w-full p-2 mb-2 border rounded">
+            <input type="text" placeholder="Foto" id="fotoContato" class="w-full p-2 mb-2 border rounded">
+            <input type="text" placeholder="Endereço" id="enderecoContato" class="w-full p-2 mb-2 border rounded">
+            <input type="text" placeholder="Cidade" id="cidadeContato" class="w-full p-2 mb-2 border rounded">
+            <div class="flex justify-between mt-2">
+                <button id="btn_editar" class="bg-black text-white px-4 py-2 rounded">EDITAR</button>
+                <button id="btn_deletar" class="bg-red-900 text-white px-4 py-2 rounded">DELETAR</button>
             </div>
         </div>
+
+        <div class="bg-white">
+            <h2 class="text-lg mb-2">Adicionar Novo Contato</h2>
+            <input type="text" placeholder="Nome" id="nome" class="w-full p-2 mb-2 border rounded">
+            <input type="text" placeholder="Email" id="email" class="w-full p-2 mb-2 border rounded">
+            <input type="number" placeholder="Celular" id="celular" class="w-full p-2 mb-2 border rounded">
+            <input type="text" placeholder="Foto" id="foto" class="w-full p-2 mb-2 border rounded">
+            <input type="text" placeholder="Endereço" id="endereco" class="w-full p-2 mb-2 border rounded">
+            <input type="text" placeholder="Cidade" id="cidade" class="w-full p-2 mb-2 border rounded">
+            <button id="btn_adicionar" class="bg-black text-white px-4 py-2 rounded w-full mt-2">ADICIONAR CONTATO</button>
+        </div>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>

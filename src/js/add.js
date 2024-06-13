@@ -1,30 +1,35 @@
+
 'use strict'
-const cadastrarProdutos = function(){
-    const nome = document.getElementById("nome")
-    const categorias = document.getElementById("categorias")
-    const preco = document.getElementById("preco")
-    const desconto = document.getElementById('desconto')
-    const imagem = document.getElementById('imagem')
-    const descricao = document.getElementById('descricao')
-    const quantidade = document.getElementById('quantidade')
-    const ingredientes = document.getElementById('ingredientes')
-    const id = document.getElementById('id')
+const cadastrarProdutos = async function(){
+
+    const nomeHtml = document.getElementById("nome")
+    const celularHtml = document.getElementById("celular")
+    const emailHtml = document.getElementById("email")
+    const fotoHtml = document.getElementById("foto")
+    const enderecoHtml = document.getElementById("endereco")
+    const cidadeHtml = document.getElementById("cidade")
+
     const novoProdutos = {}
-    novoProdutos.nome = nome.value
-    novoProdutos.categorias = categorias.value
-    novoProdutos.preco = preco.value
-    novoProdutos.desconto = desconto.value
-    novoProdutos.imagem = imagem.value
-    novoProdutos.descricao = descricao.value
-    novoProdutos.quantidade = quantidade.value
-    novoProdutos.ingredientes = ingredientes.value
-    novoProdutos.id = id.value
+
+    novoProdutos.nome = nomeHtml.value
+    novoProdutos.celular=celularHtml.value
+    novoProdutos.foto=fotoHtml.value
+    novoProdutos.email=emailHtml.value
+    novoProdutos.endereco=enderecoHtml.value
+    novoProdutos.cidade=cidadeHtml.value
+
+
+    
     console.log(novoProdutos)
-    cadProd(novoProdutos)
+    const retornoApi= await cadProd(novoProdutos)
+    if(retornoApi){
+        window.location.reload()
+    }
+
     return novoProdutos
 }
 const cadProd = async function(prod){
-    const url = 'http://localhost:8080/produtos'
+    const url = 'http://localhost:8080/contatos'
     const options = {
         method: 'POST',
         headers: {
@@ -35,10 +40,6 @@ const cadProd = async function(prod){
     const response = await fetch(url, options)
     return response.ok
 }
-const botao = document.getElementById('botao')
-const trocarPagina = function(){
-    if(cadastrarProdutos()){
-        window.location.href = '../index.html'
-    }
-}
+const botao = document.getElementById('btn_adicionar')
 botao.addEventListener('click', cadastrarProdutos)
+
